@@ -1,21 +1,36 @@
 from peewee import *
 
-database = PostgresqlDatabase('magic')
+db = PostgresqlDatabase('magic', user='f3m', password='', host='localhost', port=5432)
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass
+class UIntField(Field):
+    field_type = 'uint'
+
+    def db_value(self, value):
+        if value is None:
+            return None
+        if int(value) < 0:
+            raise ValueError("The value must be >= 0.")
+        return int(value)
+
+    def python_value(self, value):
+        if value is None:
+            return None
+        return int(value)
+
 
 class BaseModel(Model):
     class Meta:
-        database = database
+        database = db
 
 class ManaCost(BaseModel):
     black = DoubleField()
     blue = DoubleField()
-    colorless = UnknownField()  # integer
+    colorless = UIntField()
     green = DoubleField()
     red = DoubleField()
-    snow = UnknownField()  # integer
+    snow = UIntField()
     white = DoubleField()
 
     class Meta:
@@ -177,3 +192,6 @@ class Types(BaseModel):
 
     def __repr__(self):
         return f"{self.type.__repr__()}"
+
+
+

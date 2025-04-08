@@ -1,8 +1,11 @@
 import json
 from typing import AnyStr
 
+from peewee import IntegrityError
+
 from parsers import parse_mana_cost, parse_planeswalker_abilities, parse_colors, parse_types, parse_supertypes, parse_subtypes
-from tables import Card
+from tables import Card, db
+
 
 def insert_planeswalker(_data: dict[str, AnyStr]):
     mana_cost = parse_mana_cost(_data["mana_cost"])
@@ -14,12 +17,28 @@ def insert_planeswalker(_data: dict[str, AnyStr]):
     supertypes = parse_supertypes(_card, _data["supertypes"])
     subtypes = parse_subtypes(_card, _data["subtypes"])
 
-    print(mana_cost.__repr__())
-    mana_cost.save()
+    with db.atomic() as txn:
+        try:
+            mana_cost.save()
+            print("MANA VALUE: OK")
+        except IntegrityError as err:
+            if "mana_cost_k" not in str(err).lower():
+                raise
+            else:
+                print("MANA VALUE DUPLICATED")
+        try:
+            print(_card.save())
+            print("INSERTED: OK" )
+        except IntegrityError as err:
+            if "card_k" not in str(err).lower():
+                raise
+            else:
+                print("DUPLICATED")
+
 
 if __name__ == '__main__':
-    data = json.load(open('/home/f3m/Documents/AtomicCards.json'))
-    data2 = json.load(open('/home/f3m/Documents/AtomicCards.backup.json'))
+    data = json.load(open('AtomicCards.json'))
+    data2 = json.load(open('AtomicCards.backup.json'))
     print(len(data["data"]))
 
     for name, value in data["data"].items():
@@ -38,3 +57,4 @@ if __name__ == '__main__':
                          "supertypes": val["supertypes"] if "supertypes" in val else "" }
 
                 insert_planeswalker(card)
+                exit()

@@ -62,7 +62,6 @@ def parse_mana_cost(mana_cost: str):
                 mana_cost.snow += 1
             case _:
                 mana_cost.colorless = 0 if elm == "X" else elm
-    print(mana_cost.colorless)
     return mana_cost
 def parse_planeswalker_abilities(name: Card, text: str):
     out = []
