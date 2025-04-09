@@ -4,8 +4,17 @@ from typing import AnyStr
 from peewee import IntegrityError
 
 from parsers import parse_mana_cost, parse_planeswalker_abilities, parse_colors, parse_types, parse_supertypes, parse_subtypes
-from tables import Card, db
+from tables import Card, db, ManaCost
 
+def get_mana_cost_id(mana_cost: ManaCost):
+    out = ManaCost.select(ManaCost.id).where(ManaCost.colorless == mana_cost.colorless,
+                                             ManaCost.white == mana_cost.white,
+                                             ManaCost.blue == mana_cost.blue,
+                                             ManaCost.black == mana_cost.black,
+                                             ManaCost.red == mana_cost.red,
+                                             ManaCost.green == mana_cost.green,
+                                             ManaCost.snow == mana_cost.snow).get()
+    return out
 
 def insert_planeswalker(_data: dict[str, AnyStr]):
     mana_cost = parse_mana_cost(_data["mana_cost"])
@@ -17,24 +26,33 @@ def insert_planeswalker(_data: dict[str, AnyStr]):
     supertypes = parse_supertypes(_card, _data["supertypes"])
     subtypes = parse_subtypes(_card, _data["subtypes"])
 
-    with db.atomic() as txn:
+    mana_txn = False
+    card_txn = False
+
+    with db.atomic():
         try:
-            mana_cost.save()
-            print("MANA VALUE: OK")
+            print("MANA COST: ", mana_cost.save())
+            mana_txn = True
         except IntegrityError as err:
             if "mana_cost_k" not in str(err).lower():
-                raise
+                print(err)
+                raise err
             else:
                 print("MANA VALUE DUPLICATED")
+
+    if not mana_txn:
+        _card.mana_cost = get_mana_cost_id(mana_cost)
+
+    with db.atomic():
         try:
-            print(_card.save())
-            print("INSERTED: OK" )
+            print("CARD: ", _card.save())
+            card_txn = True
         except IntegrityError as err:
             if "card_k" not in str(err).lower():
-                raise
+                print(err)
+                raise err
             else:
-                print("DUPLICATED")
-
+                print("CARD DUPLICATED")
 
 if __name__ == '__main__':
     data = json.load(open('AtomicCards.json'))

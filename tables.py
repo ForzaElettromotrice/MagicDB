@@ -1,6 +1,6 @@
 from peewee import *
 
-db = PostgresqlDatabase('magic', user='f3m', password='', host='localhost', port=5432)
+db = PostgresqlDatabase('magic', user = 'f3m', password = '', host = 'localhost', port = 5432)
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass
@@ -19,7 +19,6 @@ class UIntField(Field):
             return None
         return int(value)
 
-
 class BaseModel(Model):
     class Meta:
         database = db
@@ -32,11 +31,12 @@ class ManaCost(BaseModel):
     red = DoubleField()
     snow = UIntField()
     white = DoubleField()
+    id = AutoField(primary_key = True)
 
     class Meta:
         table_name = 'mana_cost'
         indexes = (
-            (('colorless', 'red', 'blue', 'green', 'black', 'white', 'snow'), True),
+            (('colorless', 'red', 'blue', 'green', 'black', 'white', 'snow', 'id'), True),
         )
 
     def __repr__(self):
@@ -192,6 +192,3 @@ class Types(BaseModel):
 
     def __repr__(self):
         return f"{self.type.__repr__()}"
-
-
-
