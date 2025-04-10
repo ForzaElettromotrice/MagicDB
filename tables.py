@@ -1,5 +1,7 @@
 from peewee import *
 
+from enums import types, colors, supertypes, subtypes
+
 db = PostgresqlDatabase('magic', user = 'f3m', password = '', host = 'localhost', port = 5432)
 
 class UnknownField(object):
@@ -43,7 +45,7 @@ class ManaCost(BaseModel):
         return f"{self.colorless if self.colorless != 0 else ''}{'R' * int(self.red)}{'U' * int(self.blue)}{'G' * int(self.green)}{'B' * int(self.black)}{'W' * int(self.white)}{'S' * int(self.snow)}"
 class Card(BaseModel):
     defense = IntegerField(null = True)
-    loyalty = UnknownField(null = True)  # integer
+    loyalty = UIntField(null = True)
     mana_cost = ForeignKeyField(column_name = 'mana_cost', field = 'id', model = ManaCost)
     name = CharField(primary_key = True)
     power = IntegerField(null = True)
@@ -95,7 +97,7 @@ class AttackCharacteristics(BaseModel):
         primary_key = CompositeKey('characteristic', 'name')
 
 class Colors(BaseModel):
-    color = UnknownField()  # USER-DEFINED
+    color = CharField(choices = [e for e in colors])
     name = ForeignKeyField(column_name = 'name', field = 'name', model = Card)
 
     class Meta:
@@ -144,7 +146,7 @@ class MeldCard(BaseModel):
 
 class Subtypes(BaseModel):
     name = ForeignKeyField(column_name = 'name', field = 'name', model = Card)
-    subtype = UnknownField()  # USER-DEFINED
+    subtype = CharField(choices = [e for e in subtypes])
 
     class Meta:
         table_name = 'subtypes'
@@ -157,7 +159,7 @@ class Subtypes(BaseModel):
         return f"{self.subtype.__repr__()}"
 class Supertypes(BaseModel):
     name = ForeignKeyField(column_name = 'name', field = 'name', model = Card)
-    supertype = UnknownField()  # USER-DEFINED
+    supertype = CharField(choices = [e for e in supertypes])
 
     class Meta:
         table_name = 'supertypes'
@@ -181,7 +183,7 @@ class TriggerableCharacteristics(BaseModel):
 
 class Types(BaseModel):
     name = ForeignKeyField(column_name = 'name', field = 'name', model = Card)
-    type = UnknownField()  # USER-DEFINED
+    type = CharField(choices = [e for e in types])
 
     class Meta:
         table_name = 'types'

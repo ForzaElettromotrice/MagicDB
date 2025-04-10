@@ -1,10 +1,15 @@
 import json
+import logging
 from typing import AnyStr
 
 from peewee import IntegrityError
 
 from parsers import parse_mana_cost, parse_planeswalker_abilities, parse_colors, parse_types, parse_supertypes, parse_subtypes
 from tables import Card, db, ManaCost
+
+logger = logging.getLogger('peewee')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler())
 
 def get_mana_cost_id(mana_cost: ManaCost):
     out = ManaCost.select(ManaCost.id).where(ManaCost.colorless == mana_cost.colorless,
@@ -27,11 +32,10 @@ def insert_planeswalker(_data: dict[str, AnyStr]):
     subtypes = parse_subtypes(_card, _data["subtypes"])
 
     mana_txn = False
-    card_txn = False
 
     with db.atomic():
         try:
-            print("MANA COST: ", mana_cost.save())
+            print("MANA COST: ", mana_cost.save(force_insert = True))
             mana_txn = True
         except IntegrityError as err:
             if "mana_cost_k" not in str(err).lower():
@@ -45,10 +49,20 @@ def insert_planeswalker(_data: dict[str, AnyStr]):
 
     with db.atomic():
         try:
-            print("CARD: ", _card.save())
-            card_txn = True
+            print("CARD: ", _card.save(force_insert = True))
+            for _i, ability in enumerate(abilities, 1):
+                print(f"ABILITY {_i}: ", ability.save(force_insert = True))
+            for _i, color in enumerate(colors, 1):
+                print(f"COLOR {_i}: ", color.save(force_insert = True))
+            for _i, type_ in enumerate(types, 1):
+                print(f"TYPE {_i}: ", type_.save(force_insert = True))
+            for _i, subtype in enumerate(subtypes, 1):
+                print(f"SUBTYPE {_i}: ", subtype.save(force_insert = True))
+            for _i, supertype in enumerate(supertypes, 1):
+                print(f"SUPERTYPE {_i}: ", supertype.save(force_insert = True))
+
         except IntegrityError as err:
-            if "card_k" not in str(err).lower():
+            if "card_pk" not in str(err).lower():
                 print(err)
                 raise err
             else:
@@ -75,4 +89,3 @@ if __name__ == '__main__':
                          "supertypes": val["supertypes"] if "supertypes" in val else "" }
 
                 insert_planeswalker(card)
-                exit()
