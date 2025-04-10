@@ -4,7 +4,7 @@ from typing import Any
 
 from peewee import IntegrityError
 
-from parsers import parse_mana_cost, parse_planeswalker_abilities, parse_colors, parse_types, parse_supertypes, parse_subtypes, parse_characteristic, parse_sacrifice_ability
+from parsers import parse_mana_cost, parse_planeswalker_abilities, parse_colors, parse_types, parse_supertypes, parse_subtypes, parse_characteristic, parse_sacrifice_ability, parse_equip_ability
 from tables import Card, db, ManaCost, DoubleCard, MeldCard
 
 logger = logging.getLogger('peewee')
@@ -76,7 +76,8 @@ def insert_non_planeswalker(_data: dict[str, Any]):
     types = parse_types(_card, _data["types"])
     supertypes = parse_supertypes(_card, _data["supertypes"])
     subtypes = parse_subtypes(_card, _data["subtypes"])
-    active_ability = parse_sacrifice_ability(_card, _data["text"])
+    sacrifice_ability = parse_sacrifice_ability(_card, _data["text"])
+    equip_cost, equip_ability = parse_equip_ability(_card, _data["text"])
 
     mana_txn = False
 
@@ -107,8 +108,20 @@ def insert_non_planeswalker(_data: dict[str, Any]):
                 print(f"SUBTYPE {_i}: ", subtype.save(force_insert = True))
             for _i, supertype in enumerate(supertypes, 1):
                 print(f"SUPERTYPE {_i}: ", supertype.save(force_insert = True))
-            if active_ability is not None:
-                print("ACTIVE ABILITY: ", active_ability.save(force_insert = True))
+            if sacrifice_ability is not None:
+                print("SACRIFICE ABILITY: ", sacrifice_ability.save(force_insert = True))
+            if equip_ability is not None:
+                with db.atomic():
+                    try:
+                        print("EQUIP COST: ", equip_cost.save(force_insert = True))
+                    except IntegrityError as err:
+                        if "mana_cost_k" not in str(err).lower():
+                            print(err)
+                            raise err
+                        else:
+                            print("EQUIP COST DUPLICATED")
+                            equip_ability.mana_cost = get_mana_cost_id(equip_cost)
+                print("EQUIP ABILITY: ", equip_ability.save(force_insert = True))
 
         except IntegrityError as err:
             if "card_pk" not in str(err).lower():

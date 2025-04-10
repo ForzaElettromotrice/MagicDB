@@ -59,7 +59,7 @@ class Card(BaseModel):
 
 class ActivableAbility(BaseModel):
     discard = BooleanField(null = True)
-    life_points = UnknownField(null = True)  # integer
+    life_points = UIntField(null = True)
     loyalty = IntegerField(null = True)
     mana_cost = ForeignKeyField(column_name = 'mana_cost', field = 'id', model = ManaCost, null = True)
     name = ForeignKeyField(column_name = 'name', field = 'name', model = Card)
