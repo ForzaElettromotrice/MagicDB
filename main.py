@@ -67,99 +67,7 @@ def insert_planeswalker(_data: dict[str, Any]):
                 raise err
             else:
                 print("CARD DUPLICATED")
-def insert_creature(_data: dict[str, Any]):
-    mana_cost = parse_mana_cost(_data["mana_cost"])
-
-    _card = Card(name = _data["name"], power = _data["power"], defense = _data["defense"], text = _data["text"], mana_cost = mana_cost)
-    characteristics = parse_characteristic(_card, _data["text"])
-    colors = parse_colors(_card, _data["colors"])
-    types = parse_types(_card, _data["types"])
-    supertypes = parse_supertypes(_card, _data["supertypes"])
-    subtypes = parse_subtypes(_card, _data["subtypes"])
-
-    mana_txn = False
-
-    with db.atomic():
-        try:
-            print("MANA COST: ", mana_cost.save(force_insert = True))
-            mana_txn = True
-        except IntegrityError as err:
-            if "mana_cost_k" not in str(err).lower():
-                print(err)
-                raise err
-            else:
-                print("MANA VALUE DUPLICATED")
-
-    if not mana_txn:
-        _card.mana_cost = get_mana_cost_id(mana_cost)
-
-    with db.atomic():
-        try:
-            print("CARD: ", _card.save(force_insert = True))
-            for _i, characteristic in enumerate(characteristics, 1):
-                print(f"CHARACTERISTIC {_i}: ", characteristic.save(force_insert = True))
-            for _i, color in enumerate(colors, 1):
-                print(f"COLOR {_i}: ", color.save(force_insert = True))
-            for _i, type_ in enumerate(types, 1):
-                print(f"TYPE {_i}: ", type_.save(force_insert = True))
-            for _i, subtype in enumerate(subtypes, 1):
-                print(f"SUBTYPE {_i}: ", subtype.save(force_insert = True))
-            for _i, supertype in enumerate(supertypes, 1):
-                print(f"SUPERTYPE {_i}: ", supertype.save(force_insert = True))
-
-        except IntegrityError as err:
-            if "card_pk" not in str(err).lower():
-                print(err)
-                raise err
-            else:
-                print("CARD DUPLICATED")
-def insert_artifact(_data: dict[str, Any]):
-    mana_cost = parse_mana_cost(_data["mana_cost"])
-
-    _card = Card(name = _data["name"], power = _data["power"], defense = _data["defense"], text = _data["text"], mana_cost = mana_cost)
-    characteristics = parse_characteristic(_card, _data["text"])
-    colors = parse_colors(_card, _data["colors"])
-    types = parse_types(_card, _data["types"])
-    supertypes = parse_supertypes(_card, _data["supertypes"])
-    subtypes = parse_subtypes(_card, _data["subtypes"])
-
-    mana_txn = False
-
-    with db.atomic():
-        try:
-            print("MANA COST: ", mana_cost.save(force_insert = True))
-            mana_txn = True
-        except IntegrityError as err:
-            if "mana_cost_k" not in str(err).lower():
-                print(err)
-                raise err
-            else:
-                print("MANA VALUE DUPLICATED")
-
-    if not mana_txn:
-        _card.mana_cost = get_mana_cost_id(mana_cost)
-
-    with db.atomic():
-        try:
-            print("CARD: ", _card.save(force_insert = True))
-            for _i, characteristic in enumerate(characteristics, 1):
-                print(f"CHARACTERISTIC {_i}: ", characteristic.save(force_insert = True))
-            for _i, color in enumerate(colors, 1):
-                print(f"COLOR {_i}: ", color.save(force_insert = True))
-            for _i, type_ in enumerate(types, 1):
-                print(f"TYPE {_i}: ", type_.save(force_insert = True))
-            for _i, subtype in enumerate(subtypes, 1):
-                print(f"SUBTYPE {_i}: ", subtype.save(force_insert = True))
-            for _i, supertype in enumerate(supertypes, 1):
-                print(f"SUPERTYPE {_i}: ", supertype.save(force_insert = True))
-
-        except IntegrityError as err:
-            if "card_pk" not in str(err).lower():
-                print(err)
-                raise err
-            else:
-                print("CARD DUPLICATED")
-def insert_land(_data: dict[str, Any]):
+def insert_non_planeswalker(_data: dict[str, Any]):
     mana_cost = parse_mana_cost(_data["mana_cost"])
 
     _card = Card(name = _data["name"], power = _data["power"], defense = _data["defense"], text = _data["text"], mana_cost = mana_cost)
@@ -212,44 +120,20 @@ if __name__ == '__main__':
 
     for name, value in data["data"].items():
         for val in value:
-            # if "types" in val and "Planeswalker" in val["types"]:
-            #                card = { "name": val["faceName"] if "faceName" in val else name,
-            #                      "power": 0,
-            #                     "defense": 0,
-            #                    "text": val["text"],
-            #                   "mana_cost": val["manaCost"] if "manaCost" in val else "",
-            #                  "loyalty": int(val["loyalty"]) if "loyalty" in val and val["loyalty"] != "X" else 0,
-            #                 "colors": val["colors"],
-            #                "subtypes": val["subtypes"] if "subtypes" in val else "",
-            #               "types": val["types"] if "types" in val else "",
-            #              "supertypes": val["supertypes"] if "supertypes" in val else "" }
+            if "types" in val and "Planeswalker" in val["types"]:
+                card = { "name": val["faceName"] if "faceName" in val else name,
+                         "power": 0,
+                         "defense": 0,
+                         "text": val["text"],
+                         "mana_cost": val["manaCost"] if "manaCost" in val else "",
+                         "loyalty": int(val["loyalty"]) if "loyalty" in val and val["loyalty"] != "X" else 0,
+                         "colors": val["colors"],
+                         "subtypes": val["subtypes"] if "subtypes" in val else "",
+                         "types": val["types"] if "types" in val else "",
+                         "supertypes": val["supertypes"] if "supertypes" in val else "" }
 
-            #    insert_planeswalker(card)
-            # elif "types" in val and "Creature" in val["types"]:
-            #   card = {
-            #      "name": val["faceName"] if "faceName" in val else name,
-            #     "power": val["power"].replace("*", "0").replace("X", "0").replace("+", "").replace("?", "0") if "power" in val else 0,
-            #    "defense": val["defense"].replace("*", "0").replace("X", "0").replace("?", "0") if "defense" in val else 0,
-            #   "text": val["text"] if "text" in val else "",
-            #  "mana_cost": val["manaCost"].replace("{D}", "").replace("{L}", "") if "manaCost" in val else "",
-            # "colors": val["colors"],
-            # "subtypes": val["subtypes"] if "subtypes" in val else "",
-            # "types": val["types"] if "types" in val else "",
-            # "supertypes": val["supertypes"] if "supertypes" in val else "" }
-            # insert_creature(card)
-            # if "types" in val and "Artifact" in val["types"]:
-            #   card = {
-            #      "name": val["faceName"] if "faceName" in val else name,
-            #     "power": 0,
-            #    "defense": 0,
-            #   "text": val["text"] if "text" in val else "",
-            #  "mana_cost": val["manaCost"].replace("{D}", "").replace("{L}", "") if "manaCost" in val else "",
-            # "colors": val["colors"],
-            # "subtypes": val["subtypes"] if "subtypes" in val else "",
-            # "types": val["types"] if "types" in val else "",
-            # "supertypes": val["supertypes"] if "supertypes" in val else "" }
-            # insert_artifact(card)
-            if "types" in val and "Land" in val["types"]:
+                insert_planeswalker(card)
+            else:
                 card = {
                     "name": val["faceName"] if "faceName" in val else name,
                     "power": 0,
@@ -261,4 +145,4 @@ if __name__ == '__main__':
                     "types": val["types"] if "types" in val else "",
                     "supertypes": val["supertypes"] if "supertypes" in val else ""
                 }
-                insert_land(card)
+                insert_non_planeswalker(card)
