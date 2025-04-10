@@ -4,7 +4,7 @@ from typing import Any
 
 from peewee import IntegrityError
 
-from parsers import parse_mana_cost, parse_planeswalker_abilities, parse_colors, parse_types, parse_supertypes, parse_subtypes, parse_characteristic
+from parsers import parse_mana_cost, parse_planeswalker_abilities, parse_colors, parse_types, parse_supertypes, parse_subtypes, parse_characteristic, parse_sacrifice_ability
 from tables import Card, db, ManaCost, DoubleCard
 
 logger = logging.getLogger('peewee')
@@ -76,6 +76,7 @@ def insert_non_planeswalker(_data: dict[str, Any]):
     types = parse_types(_card, _data["types"])
     supertypes = parse_supertypes(_card, _data["supertypes"])
     subtypes = parse_subtypes(_card, _data["subtypes"])
+    active_ability = parse_sacrifice_ability(name, _data["text"])
 
     mana_txn = False
 
@@ -106,6 +107,7 @@ def insert_non_planeswalker(_data: dict[str, Any]):
                 print(f"SUBTYPE {_i}: ", subtype.save(force_insert = True))
             for _i, supertype in enumerate(supertypes, 1):
                 print(f"SUPERTYPE {_i}: ", supertype.save(force_insert = True))
+            print("ACTIVE ABILITY: ", active_ability.save(force_insert = True))
 
         except IntegrityError as err:
             if "card_pk" not in str(err).lower():
@@ -113,8 +115,8 @@ def insert_non_planeswalker(_data: dict[str, Any]):
                 raise err
             else:
                 print("CARD DUPLICATED")
-def insert_double_face(name: str, values: list[dict[str, Any]]):
-    names = name.split(" // ")
+def insert_double_face(_name: str):
+    names = _name.split(" // ")
 
     first = DoubleCard(name = names[0], subface = names[1])
     second = DoubleCard(name = names[1], subface = names[0])
@@ -163,4 +165,4 @@ if __name__ == '__main__':
                 }
                 insert_non_planeswalker(card)
             if "layout" in val and "adventure" in val["layout"]:
-                insert_double_face(name, value)
+                insert_double_face(name)

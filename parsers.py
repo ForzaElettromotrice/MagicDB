@@ -125,3 +125,6 @@ def parse_characteristic(name: Card, text: str):
             out.append(TriggerableCharacteristics(name = name, characteristic = characteristic))
 
     return out
+def parse_sacrifice_ability(name: Card, text: str):
+    if "Sacrifice this" in text or "Sacrifice another" in text:
+        return ActivableAbility(name = name, sacrifice = True)
