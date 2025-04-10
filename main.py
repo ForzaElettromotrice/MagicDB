@@ -215,6 +215,9 @@ if __name__ == '__main__':
                     "supertypes": val["supertypes"] if "supertypes" in val else ""
                 }
                 insert_non_planeswalker(card)
+
+    for name, value in data["data"].items():
+        for val in value:
             if "layout" in val and "adventure" in val["layout"]:
                 insert_double_face(name)
 
