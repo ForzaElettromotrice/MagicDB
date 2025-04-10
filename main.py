@@ -149,8 +149,6 @@ if __name__ == '__main__':
                          "supertypes": val["supertypes"] if "supertypes" in val else "" }
 
                 insert_planeswalker(card)
-                if "layout" in val and "adventure" in val["layout"]:
-                    insert_double_face(name, value)
             else:
                 card = {
                     "name": val["faceName"] if "faceName" in val else name,
@@ -164,3 +162,5 @@ if __name__ == '__main__':
                     "supertypes": val["supertypes"] if "supertypes" in val else ""
                 }
                 insert_non_planeswalker(card)
+            if "layout" in val and "adventure" in val["layout"]:
+                insert_double_face(name, value)
