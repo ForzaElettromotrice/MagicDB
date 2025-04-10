@@ -1,6 +1,6 @@
 from peewee import *
 
-from enums import types, colors, supertypes, subtypes
+from enums import types, colors, supertypes, subtypes, activable_characteristics, attack_characteristics, constant_characterstics, triggerable_characteristics
 
 db = PostgresqlDatabase('magic', user = 'f3m', password = '', host = 'localhost', port = 5432)
 
@@ -75,7 +75,7 @@ class ActivableAbility(BaseModel):
     def __repr__(self):
         return f"({self.name.__repr__()}, {self.loyalty.__repr__()}, {self.life_points.__repr__()}, {self.sacrifice.__repr__()}, {self.mana_cost.__repr__()}, {self.tap.__repr__()}, {self.discard.__repr__()})"
 class ActivableCharacteristics(BaseModel):
-    characteristic = UnknownField()  # USER-DEFINED
+    characteristic = CharField(choices = [e for e in activable_characteristics])
     name = ForeignKeyField(column_name = 'name', field = 'name', model = Card)
 
     class Meta:
@@ -86,7 +86,7 @@ class ActivableCharacteristics(BaseModel):
         primary_key = CompositeKey('characteristic', 'name')
 
 class AttackCharacteristics(BaseModel):
-    characteristic = UnknownField()  # USER-DEFINED
+    characteristic = CharField(choices = [e for e in attack_characteristics])
     name = ForeignKeyField(column_name = 'name', field = 'name', model = Card)
 
     class Meta:
@@ -111,7 +111,7 @@ class Colors(BaseModel):
         return f"{self.color.__repr__()}"
 
 class ConstantCharacteristics(BaseModel):
-    characteristic = UnknownField()  # USER-DEFINED
+    characteristic = CharField(choices = [e for e in constant_characterstics])
     name = ForeignKeyField(column_name = 'name', field = 'name', model = Card)
 
     class Meta:
@@ -171,7 +171,7 @@ class Supertypes(BaseModel):
     def __repr__(self):
         return f"{self.supertype.__repr__()}"
 class TriggerableCharacteristics(BaseModel):
-    characteristic = UnknownField()  # USER-DEFINED
+    characteristic = CharField(choices = [e for e in triggerable_characteristics])
     name = ForeignKeyField(column_name = 'name', field = 'name', model = Card)
 
     class Meta:

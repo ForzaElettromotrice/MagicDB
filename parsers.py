@@ -1,5 +1,5 @@
-from enums import types, supertypes, subtypes
-from tables import ManaCost, ActivableAbility, Card, Colors, Types, Supertypes, Subtypes
+from enums import types, supertypes, subtypes, activable_characteristics, attack_characteristics, constant_characterstics, triggerable_characteristics
+from tables import ManaCost, ActivableAbility, Card, Colors, Types, Supertypes, Subtypes, ActivableCharacteristics, AttackCharacteristics, ConstantCharacteristics, TriggerableCharacteristics
 
 def parse_mana_cost(mana_cost: str):
     if mana_cost == "":
@@ -89,7 +89,7 @@ def parse_types(name: Card, _types: list[str]):
 def parse_supertypes(name: Card, _supertypes: list[str]):
     out = []
     for supertype in _supertypes:
-        if supertypes not in supertypes:
+        if supertype not in supertypes:
             continue
         out.append(Supertypes(name = name, supertype = supertype))
     return out
@@ -99,4 +99,27 @@ def parse_subtypes(name: Card, _subtypes: list[str]):
         if subtype not in subtypes:
             continue
         out.append(Subtypes(name = name, subtype = subtype))
+    return out
+
+def parse_characteristic(name: Card, text: str):
+    out = []
+    if text == "":
+        return out
+
+    for characteristic in activable_characteristics:
+        if characteristic in text:
+            out.append(ActivableCharacteristics(name = name, characteristic = characteristic))
+
+    for characteristic in attack_characteristics:
+        if characteristic in text:
+            out.append(AttackCharacteristics(name = name, characteristic = characteristic))
+
+    for characteristic in constant_characterstics:
+        if characteristic in text:
+            out.append(ConstantCharacteristics(name = name, characteristic = characteristic))
+
+    for characteristic in triggerable_characteristics:
+        if characteristic in text:
+            out.append(TriggerableCharacteristics(name = name, characteristic = characteristic))
+
     return out
