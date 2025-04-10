@@ -76,7 +76,7 @@ def insert_non_planeswalker(_data: dict[str, Any]):
     types = parse_types(_card, _data["types"])
     supertypes = parse_supertypes(_card, _data["supertypes"])
     subtypes = parse_subtypes(_card, _data["subtypes"])
-    active_ability = parse_sacrifice_ability(name, _data["text"])
+    active_ability = parse_sacrifice_ability(_card, _data["text"])
 
     mana_txn = False
 
