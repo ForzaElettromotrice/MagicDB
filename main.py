@@ -107,7 +107,7 @@ def insert_non_planeswalker(_data: dict[str, Any]):
     if not mana_txn:
         _card.mana_cost = get_mana_cost_id(mana_cost)
 
-    if not equip_mana_txn:
+    if not equip_mana_txn and equip_cost is not None:
         equip_ability.mana_cost = get_mana_cost_id(equip_cost)
 
     with db.atomic():

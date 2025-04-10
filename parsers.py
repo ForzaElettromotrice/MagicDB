@@ -130,10 +130,15 @@ def parse_sacrifice_ability(name: Card, text: str):
         return ActivableAbility(name = name, sacrifice = True)
 
 def parse_equip_ability(name: Card, text: str):
-    if "Equip {" in text:
-        text = text.split("Equip {")[1][:2]
-        if text[1] == "}":
-            text = text[0]
-        mana_cost = ManaCost(colorless = int(text), red = 0, blue = 0, green = 0, black = 0, white = 0, snow = 0)
-        return mana_cost, ActivableAbility(name = name, mana_cost = mana_cost)
-    return None, None
+    if "Equip {" not in text:
+        return None, None
+    text = text.split("Equip ")[1]
+
+    for i, c in enumerate(text):
+        if c == "}":
+            if text[i + 1] != "{":
+                text = text[:i + 1]
+                break
+
+    mana_cost = parse_mana_cost(text)
+    return mana_cost, ActivableAbility(name = name, mana_cost = mana_cost)
