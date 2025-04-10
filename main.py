@@ -5,7 +5,7 @@ from typing import Any
 from peewee import IntegrityError
 
 from parsers import parse_mana_cost, parse_planeswalker_abilities, parse_colors, parse_types, parse_supertypes, parse_subtypes, parse_characteristic
-from tables import Card, db, ManaCost
+from tables import Card, db, ManaCost, DoubleCard
 
 logger = logging.getLogger('peewee')
 logger.setLevel(logging.DEBUG)
@@ -113,6 +113,22 @@ def insert_non_planeswalker(_data: dict[str, Any]):
                 raise err
             else:
                 print("CARD DUPLICATED")
+def insert_double_face(name: str, values: list[dict[str, Any]]):
+    names = name.split(" // ")
+
+    first = DoubleCard(name = names[0], subface = names[1])
+    second = DoubleCard(name = names[1], subface = names[0])
+
+    with db.atomic():
+        try:
+            print("DOUBLE CARD 1: ", first.save(force_insert = True))
+            print("DOUBLE CARD: 2: ", second.save(force_insert = True))
+        except IntegrityError as err:
+            if "double_card_pk" not in str(err).lower():
+                print(err)
+                raise err
+            else:
+                print("DOUBLE CARD DUPLICATED")
 
 if __name__ == '__main__':
     data = json.load(open('AtomicCards.json'))
@@ -133,11 +149,13 @@ if __name__ == '__main__':
                          "supertypes": val["supertypes"] if "supertypes" in val else "" }
 
                 insert_planeswalker(card)
+                if "layout" in val and "adventure" in val["layout"]:
+                    insert_double_face(name, value)
             else:
                 card = {
                     "name": val["faceName"] if "faceName" in val else name,
-                    "power": 0,
-                    "defense": 0,
+                    "power": val["power"].replace("?", "0").replace("*", "0").replace("+", "") if "power" in val else 0,
+                    "defense": val["defense"].replace("?", "0").replace("*", "0").replace("+", "") if "defense" in val else 0,
                     "text": val["text"] if "text" in val else "",
                     "mana_cost": val["manaCost"].replace("{D}", "").replace("{L}", "") if "manaCost" in val else "",
                     "colors": val["colors"],
