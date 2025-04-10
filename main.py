@@ -80,6 +80,7 @@ def insert_non_planeswalker(_data: dict[str, Any]):
     equip_cost, equip_ability = parse_equip_ability(_card, _data["text"])
 
     mana_txn = False
+    equip_mana_txn = False
 
     with db.atomic():
         try:
@@ -91,9 +92,23 @@ def insert_non_planeswalker(_data: dict[str, Any]):
                 raise err
             else:
                 print("MANA VALUE DUPLICATED")
+    if equip_cost is not None:
+        with db.atomic():
+            try:
+                print("EQUIP COST: ", equip_cost.save(force_insert = True))
+                equip_mana_txn = True
+            except IntegrityError as err:
+                if "mana_cost_k" not in str(err).lower():
+                    print(err)
+                    raise err
+                else:
+                    print("EQUIP COST DUPLICATED")
 
     if not mana_txn:
         _card.mana_cost = get_mana_cost_id(mana_cost)
+
+    if not equip_mana_txn:
+        equip_ability.mana_cost = get_mana_cost_id(equip_cost)
 
     with db.atomic():
         try:
@@ -111,16 +126,6 @@ def insert_non_planeswalker(_data: dict[str, Any]):
             if sacrifice_ability is not None:
                 print("SACRIFICE ABILITY: ", sacrifice_ability.save(force_insert = True))
             if equip_ability is not None:
-                with db.atomic():
-                    try:
-                        print("EQUIP COST: ", equip_cost.save(force_insert = True))
-                    except IntegrityError as err:
-                        if "mana_cost_k" not in str(err).lower():
-                            print(err)
-                            raise err
-                        else:
-                            print("EQUIP COST DUPLICATED")
-                            equip_ability.mana_cost = get_mana_cost_id(equip_cost)
                 print("EQUIP ABILITY: ", equip_ability.save(force_insert = True))
 
         except IntegrityError as err:
