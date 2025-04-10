@@ -223,8 +223,8 @@ if __name__ == '__main__':
             else:
                 card = {
                     "name": val["faceName"] if "faceName" in val else name,
-                    "power": val["power"].replace("?", "0").replace("*", "0").replace("+", "") if "power" in val else 0,
-                    "defense": val["defense"].replace("?", "0").replace("*", "0").replace("+", "") if "defense" in val else (val["toughness"].replace("*", "0").replace("?", "0").replace("+", "") if "toughness" in val else 0),
+                    "power": val["power"].replace("?", "0").replace("*", "0").replace("+", "").replace("-", "") if "power" in val else 0,
+                    "defense": val["defense"].replace("?", "0").replace("*", "0").replace("+", "").replace("-", "") if "defense" in val else (val["toughness"].replace("*", "0").replace("?", "0").replace("+", "").replace("-", "") if "toughness" in val else 0),
                     "text": val["text"] if "text" in val else "",
                     "mana_cost": val["manaCost"].replace("{D}", "").replace("{L}", "") if "manaCost" in val else "",
                     "colors": val["colors"],

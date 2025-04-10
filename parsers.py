@@ -136,7 +136,7 @@ def parse_equip_ability(name: Card, text: str):
 
     for i, c in enumerate(text):
         if c == "}":
-            if text[i + 1] != "{":
+            if i < len(text) - 1 and text[i + 1] != "{":
                 text = text[:i + 1]
                 break
 
