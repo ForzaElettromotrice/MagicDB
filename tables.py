@@ -137,9 +137,9 @@ class DoubleFaceCard(BaseModel):
         table_name = 'double_face_card'
 
 class MeldCard(BaseModel):
-    first = ForeignKeyField(column_name = 'first', field = 'name', model = 'self')
+    first = ForeignKeyField(column_name = 'first', field = 'name', model = Card)
     name = ForeignKeyField(column_name = 'name', field = 'name', model = Card, primary_key = True)
-    second = ForeignKeyField(backref = 'meld_card_second_set', column_name = 'second', field = 'name', model = 'self', null = True)
+    second = ForeignKeyField(backref = 'meld_card_second_set', column_name = 'second', field = 'name', model = Card, null = True)
 
     class Meta:
         table_name = 'meld_card'

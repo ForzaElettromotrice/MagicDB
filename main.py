@@ -5,7 +5,7 @@ from typing import Any
 from peewee import IntegrityError
 
 from parsers import parse_mana_cost, parse_planeswalker_abilities, parse_colors, parse_types, parse_supertypes, parse_subtypes, parse_characteristic, parse_sacrifice_ability
-from tables import Card, db, ManaCost, DoubleCard
+from tables import Card, db, ManaCost, DoubleCard, MeldCard
 
 logger = logging.getLogger('peewee')
 logger.setLevel(logging.DEBUG)
@@ -131,10 +131,60 @@ def insert_double_face(_name: str):
                 raise err
             else:
                 print("DOUBLE CARD DUPLICATED")
+def insert_melds(data: dict[str, Any]):
+    """Argoth, Sanctum of Nature // Titania, Gaea Incarnate
+Brisela, Voice of Nightmares
+Bruna, the Fading Light // Brisela, Voice of Nightmares
+Chittering Host
+Gisela, the Broken Blade // Brisela, Voice of Nightmares
+Graf Rats // Chittering Host
+Hanweir Battlements // Hanweir, the Writhing Township
+Hanweir Garrison // Hanweir, the Writhing Township
+Hanweir, the Writhing Township
+Midnight Scavengers // Chittering Host
+Mishra, Claimed by Gix // Mishra, Lost to Phyrexia
+Mishra, Lost to Phyrexia
+Phyrexian Dragon Engine // Mishra, Lost to Phyrexia
+The Mightstone and Weakstone // Urza, Planeswalker
+Titania, Gaea Incarnate
+Titania, Voice of Gaea // Titania, Gaea Incarnate
+Urza, Lord Protector // Urza, Planeswalker
+Urza, Planeswalker"""
+    with db.atomic():
+        try:
+            MeldCard(name = "Argoth, Sanctum of Nature", first = "Titania, Gaea Incarnate").save(force_insert = True)
+            MeldCard(name = "Titania, Voice of Gaea", first = "Titania, Gaea Incarnate").save(force_insert = True)
+            MeldCard(name = "Titania, Gaea Incarnate", first = "Argoth, Sanctum of Nature", second = "Titania, Voice of Gaea").save(force_insert = True)
+
+            MeldCard(name = "Bruna, the Fading Light", first = "Brisela, Voice of Nightmares").save(force_insert = True)
+            MeldCard(name = "Gisela, the Broken Blade", first = "Brisela, Voice of Nightmares").save(force_insert = True)
+            MeldCard(name = "Brisela, Voice of Nightmares", first = "Bruna, the Fading Light", second = "Gisela, the Broken Blade").save(force_insert = True)
+
+            MeldCard(name = "Midnight Scavengers", first = "Chittering Host").save(force_insert = True)
+            MeldCard(name = "Graf Rats", first = "Chittering Host").save(force_insert = True)
+            MeldCard(name = "Chittering Host", first = "Midnight Scavengers", second = "Graf Rats").save(force_insert = True)
+
+            MeldCard(name = "Hanweir Battlements", first = "Hanweir, the Writhing Township").save(force_insert = True)
+            MeldCard(name = "Hanweir Garrison", first = "Hanweir, the Writhing Township").save(force_insert = True)
+            MeldCard(name = "Hanweir, the Writhing Township", first = "Hanweir Battlements", second = "Hanweir Garrison").save(force_insert = True)
+
+            MeldCard(name = "Mishra, Claimed by Gix", first = "Mishra, Lost to Phyrexia").save(force_insert = True)
+            MeldCard(name = "Phyrexian Dragon Engine", first = "Mishra, Lost to Phyrexia").save(force_insert = True)
+            MeldCard(name = "Mishra, Lost to Phyrexia", first = "Mishra, Claimed by Gix", second = "Phyrexian Dragon Engine").save(force_insert = True)
+
+            MeldCard(name = "Urza, Lord Protector", first = "Urza, Planeswalker").save(force_insert = True)
+            MeldCard(name = "The Mightstone and Weakstone", first = "Urza, Planeswalker").save(force_insert = True)
+            MeldCard(name = "Urza, Planeswalker", first = "Urza, Lord Protector", second = "The Mightstone and Weakstone").save(force_insert = True)
+
+        except Exception as err:
+            print(err)
+            raise err
 
 if __name__ == '__main__':
     data = json.load(open('AtomicCards.json'))
     print(len(data["data"]))
+
+    melds = ["Titania, Gaea Incarnate", "Brisela, Voice of Nightmares", "Chittering Host", "Hanweir, the Writhing Township", "Mishra, Lost to Phyrexia", "Urza, Planeswalker"]
 
     for name, value in data["data"].items():
         for val in value:
@@ -166,3 +216,5 @@ if __name__ == '__main__':
                 insert_non_planeswalker(card)
             if "layout" in val and "adventure" in val["layout"]:
                 insert_double_face(name)
+
+    insert_melds(data["data"])
