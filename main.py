@@ -70,11 +70,10 @@ def insert_planeswalker(_data: dict[str, AnyStr]):
 
 if __name__ == '__main__':
     data = json.load(open('AtomicCards.json'))
-    data2 = json.load(open('AtomicCards.backup.json'))
     print(len(data["data"]))
 
     for name, value in data["data"].items():
-        for i, val in enumerate(value):
+        for val in value:
             if "types" in val and "Planeswalker" in val["types"]:
                 # print(val)
                 card = { "name": val["faceName"] if "faceName" in val else name,
@@ -82,7 +81,7 @@ if __name__ == '__main__':
                          "defense": 0,
                          "text": val["text"],
                          "mana_cost": val["manaCost"] if "manaCost" in val else "",
-                         "loyalty": int(data2["data"][name][i]["loyalty"]) if "loyalty" in data2["data"][name][i] and data2["data"][name][i]["loyalty"] != "X" else 0,
+                         "loyalty": int(val["loyalty"]) if "loyalty" in val and val["loyalty"] != "X" else 0,
                          "colors": val["colors"],
                          "subtypes": val["subtypes"] if "subtypes" in val else "",
                          "types": val["types"] if "types" in val else "",

@@ -202,10 +202,10 @@ create table activable_ability
     tap         boolean,
     discard     boolean,
     id          integer default nextval('active_ability_id_seq'::regclass) not null
-        constraint active_ability_pk
+        constraint activable_ability_pk
             primary key,
     constraint active_ability_k
-        unique (mana_cost, loyalty, life_points, sacrifice, tap, discard)
+        unique (name, loyalty, life_points, sacrifice, mana_cost, tap, discard)
 );
 
 alter table activable_ability
@@ -383,12 +383,6 @@ END;
 $$;
 
 alter function checkplaneswalkerintegrity() owner to f3m;
-
-create trigger triggerplaneswalkercard
-    after insert
-    on card
-    for each row
-execute procedure checkplaneswalkerintegrity();
 
 create function checkisplaneswalker() returns trigger
     language plpgsql
