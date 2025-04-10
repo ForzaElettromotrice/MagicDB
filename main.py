@@ -107,7 +107,8 @@ def insert_non_planeswalker(_data: dict[str, Any]):
                 print(f"SUBTYPE {_i}: ", subtype.save(force_insert = True))
             for _i, supertype in enumerate(supertypes, 1):
                 print(f"SUPERTYPE {_i}: ", supertype.save(force_insert = True))
-            print("ACTIVE ABILITY: ", active_ability.save(force_insert = True))
+            if active_ability is not None:
+                print("ACTIVE ABILITY: ", active_ability.save(force_insert = True))
 
         except IntegrityError as err:
             if "card_pk" not in str(err).lower():
@@ -131,7 +132,7 @@ def insert_double_face(_name: str):
                 raise err
             else:
                 print("DOUBLE CARD DUPLICATED")
-def insert_melds(data: dict[str, Any]):
+def insert_melds():
     """Argoth, Sanctum of Nature // Titania, Gaea Incarnate
 Brisela, Voice of Nightmares
 Bruna, the Fading Light // Brisela, Voice of Nightmares
@@ -217,4 +218,4 @@ if __name__ == '__main__':
             if "layout" in val and "adventure" in val["layout"]:
                 insert_double_face(name)
 
-    insert_melds(data["data"])
+    insert_melds()
