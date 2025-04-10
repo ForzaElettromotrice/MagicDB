@@ -51,8 +51,10 @@ def parse_mana_cost(mana_cost: str):
                 mana_cost.white += 1
             case "S":
                 mana_cost.snow += 1
+            case "C":
+                mana_cost.colorless += 1
             case _:
-                mana_cost.colorless = 0 if elm == "X" else elm
+                mana_cost.colorless = 0 if elm == "X" else int(elm)
     return mana_cost
 def parse_planeswalker_abilities(name: Card, text: str):
     out = []

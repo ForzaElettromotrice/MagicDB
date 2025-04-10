@@ -126,7 +126,7 @@ if __name__ == '__main__':
                          "power": 0,
                          "defense": 0,
                          "text": val["text"],
-                         "mana_cost": val["manaCost"].replace("D", "") if "manaCost" in val else "",
+                         "mana_cost": val["manaCost"] if "manaCost" in val else "",
                          "loyalty": int(val["loyalty"]) if "loyalty" in val and val["loyalty"] != "X" else 0,
                          "colors": val["colors"],
                          "subtypes": val["subtypes"] if "subtypes" in val else "",
@@ -137,10 +137,10 @@ if __name__ == '__main__':
             elif "types" in val and "Creature" in val["types"]:
                 card = {
                     "name": val["faceName"] if "faceName" in val else name,
-                    "power": val["power"].replace("*", "0").replace("X", "0").replace("+", "") if "power" in val else 0,
-                    "defense": val["defense"].replace("*", "0").replace("X", "0") if "defense" in val else 0,
+                    "power": val["power"].replace("*", "0").replace("X", "0").replace("+", "").replace("?", "0") if "power" in val else 0,
+                    "defense": val["defense"].replace("*", "0").replace("X", "0").replace("?", "0") if "defense" in val else 0,
                     "text": val["text"] if "text" in val else "",
-                    "mana_cost": val["manaCost"] if "manaCost" in val else "",
+                    "mana_cost": val["manaCost"].replace("{D}", "").replace("{L}", "") if "manaCost" in val else "",
                     "colors": val["colors"],
                     "subtypes": val["subtypes"] if "subtypes" in val else "",
                     "types": val["types"] if "types" in val else "",
