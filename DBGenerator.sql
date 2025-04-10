@@ -319,12 +319,6 @@ $$;
 
 alter function bidirectionaldoublecard() owner to f3m;
 
-create trigger triggerdoublecard
-    after insert
-    on double_card
-    for each row
-execute procedure bidirectionaldoublecard();
-
 create function bidirectionalmeldcard() returns trigger
     language plpgsql
 as
