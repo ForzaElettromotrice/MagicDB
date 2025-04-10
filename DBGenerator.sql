@@ -258,10 +258,10 @@ create table meld_card
             references card,
     first  varchar not null
         constraint meld_card_fk_2
-            references meld_card,
+            references card,
     second varchar
         constraint meld_card_fk_3
-            references meld_card
+            references card
 );
 
 alter table meld_card
@@ -352,12 +352,6 @@ END;
 $$;
 
 alter function bidirectionalmeldcard() owner to f3m;
-
-create trigger triggermeldcard
-    after insert
-    on meld_card
-    for each row
-execute procedure bidirectionalmeldcard();
 
 create function checkplaneswalkerintegrity() returns trigger
     language plpgsql
