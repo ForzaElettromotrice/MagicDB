@@ -4,7 +4,6 @@ CREATE INDEX index_sacrifice ON activable_ability(sacrifice);
 CREATE INDEX index_attack ON card(power);
 CREATE INDEX index_defense ON card(defense);
 CREATE INDEX index_mana ON card(mana_cost);
-CREATE INDEX index_type ON types(type);
 CREATE UNIQUE INDEX tot_mana_pk ON tot_mana(id, cost)
 --To optimize the DB, create this materialized view
 CREATE MATERIALIZED VIEW tot_mana AS
