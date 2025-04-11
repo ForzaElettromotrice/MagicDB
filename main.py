@@ -203,8 +203,6 @@ if __name__ == '__main__':
     data = json.load(open('AtomicCards.json'))
     print(len(data["data"]))
 
-    melds = ["Titania, Gaea Incarnate", "Brisela, Voice of Nightmares", "Chittering Host", "Hanweir, the Writhing Township", "Mishra, Lost to Phyrexia", "Urza, Planeswalker"]
-
     for name, value in data["data"].items():
         for val in value:
             if "types" in val and "Planeswalker" in val["types"]:
@@ -214,7 +212,7 @@ if __name__ == '__main__':
                          "text": val["text"],
                          "mana_cost": val["manaCost"] if "manaCost" in val else "",
                          "loyalty": int(val["loyalty"]) if "loyalty" in val and val["loyalty"] != "X" else 0,
-                         "colors": val["colors"],
+                         "colors": val["colorIdentity"],
                          "subtypes": val["subtypes"] if "subtypes" in val else "",
                          "types": val["types"] if "types" in val else "",
                          "supertypes": val["supertypes"] if "supertypes" in val else "" }
@@ -227,7 +225,7 @@ if __name__ == '__main__':
                     "defense": val["defense"].replace("?", "0").replace("*", "0").replace("+", "").replace("-", "") if "defense" in val else (val["toughness"].replace("*", "0").replace("?", "0").replace("+", "").replace("-", "") if "toughness" in val else 0),
                     "text": val["text"] if "text" in val else "",
                     "mana_cost": val["manaCost"].replace("{D}", "").replace("{L}", "") if "manaCost" in val else "",
-                    "colors": val["colors"],
+                    "colors": val["colorIdentity"],
                     "subtypes": val["subtypes"] if "subtypes" in val else "",
                     "types": val["types"] if "types" in val else "",
                     "supertypes": val["supertypes"] if "supertypes" in val else ""
