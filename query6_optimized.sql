@@ -1,4 +1,5 @@
 -- 6. Find adventure cards that require at least 5 mana
+-- We can optimize this query by only selecting the fields we are interested in; using the view to calculate the total mana cost; using inner joins instead of multiple 'where' clauses; and not ordering by cost since it's not needed
 EXPLAIN ANALYZE
 SELECT d.name, d.subface, SUM(m1.tot + m2.tot) AS cost
 FROM double_card d
