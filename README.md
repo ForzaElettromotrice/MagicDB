@@ -14,9 +14,9 @@ To run the Python code that populates the database from the dataset, the followi
 
 Then, in the `table.py` file, at line 5, the following line appears:
 
-    ```python
-    db = PostgresqlDatabase('magic', user = 'f3m', password = '', host = 'localhost', port = 5432)
-    ```
+```
+db = PostgresqlDatabase('magic', user = 'f3m', password = '', host = 'localhost', port = 5432)
+```
 
 Modify the `user`, `password`, `host`, and `port` parameters according to your database configuration.
 
