@@ -1,5 +1,7 @@
 --8. Find instants with a cost of exactly 1 colored mana grouped by color
-EXPLAIN ANALYSE
+-- First, we select cards according to type (Instant), then we calculate the total mana cost and check if it's equal to 1 and if it's not colorless, lastly we group by color
+-- Distinct is used to avoid duplicates
+EXPLAIN ANALYSE -- This command is used to examine the efficiency of the query 
 SELECT DISTINCT cl.color, c.*
 FROM card c, types t, colors cl
 WHERE c.name=t.name
