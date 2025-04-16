@@ -1,4 +1,5 @@
 -- 9. Find all creatures with power higher than defense, green with Trample, Vigilance and cost >= 3
+-- We can optimize this query by only selecting the fields we are interested in; not using distinct since there are no duplicates; using inner joins to avoid multiple 'where' clauses
 EXPLAIN ANALYSE
 SELECT c.name
 FROM card c
