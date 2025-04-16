@@ -1,25 +1,31 @@
-# Step 1: Creazione del database
+# Step 1: Database Creation
 
-Il progetto è stato pensato per essere eseguito su PostgreSQL.
+The project is designed to run on PostgreSQL.
 
-Il nome del database deve essere `magic`.
-Una volta creato il database, è necessario eseguire la query in `DBGenerator.sql` per creare le tabelle, i vincoli e i domini necessari al funzionamento del database.
+The database name must be `magic`.  
+Once the database has been created, you need to run the query in `DBGenerator.sql` to create the necessary tables, constraints, and domains required for the database to function properly.
 
-# Step 2: Popolamento del database
+# Step 2: Populating the Database
 
-Per eseguire il codice python che popola il database a partire dal dataset sono necessarie le seguenti librerie scaricabili tramite pip
-- peewee
+To run the Python code that populates the database from the dataset, the following libraries are required and can be installed via pip:
+
+- peewee  
 - psycopg2
 
-Successivamente nel file `table.py` è presente a riga 5 la seguente istruzione:
-```python
-db = PostgresqlDatabase('magic', user = 'f3m', password = '', host = 'localhost', port = 5432)
-```
-Modificare i parametri `user`, `password`, `host` e `port` in base alla configurazione del proprio database.
+Then, in the `table.py` file, at line 5, the following line appears:
 
-Una volta fatto ciò si può eseguire il `main.py` e il database verrà popolato con i dati del dataset.
+    ```python
+    db = PostgresqlDatabase('magic', user = 'f3m', password = '', host = 'localhost', port = 5432)
+    ```
 
-# Step 3: Esecuzione delle query
+Modify the `user`, `password`, `host`, and `port` parameters according to your database configuration.
 
-Per testare le query da noi proposte, è necessario eseguire prima quelle non ottimizzate, e prima di eseguire quelle ottimizzate si devono creare gli indici e la view utilizzando la query in `optimization.sql`.
-Da notare che dopo aver creato gli indici e la view anche le query non ottimizzate saranno più performanti rispetto a prima.
+Once this is done, you can run `main.py` and the database will be populated with the data from the dataset.
+
+# Step 3: Running the Queries
+
+To test the provided queries, you must first run the **unoptimized** ones.  
+Before running the **optimized** queries, you need to create the indexes and the view using the `optimization.sql` script.
+
+> **Note:**  
+> After creating the indexes and the view, even the unoptimized queries will perform better than before.
