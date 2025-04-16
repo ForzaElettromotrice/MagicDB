@@ -1,5 +1,7 @@
 -- 6. Find adventure cards that require at least 5 mana
-EXPLAIN ANALYSE
+-- First, we select double cards according to subtype (Adventure), then we calculate the total mana value for each face, uniting them in a single table, and then we calculate the sum of the values, checking if it's higher than 4
+-- To sum correctly, we group by face and subface, and order by cost
+EXPLAIN ANALYSE -- This command is used to examine the efficiency of the query 
 SELECT d.*, SUM(t.value) as cost
 FROM double_card d, card c1, card c2, subtypes t1,
      LATERAL (
