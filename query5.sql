@@ -1,5 +1,6 @@
 -- 5. Find the equippable artifact(s) with the highest mana cost
-EXPLAIN ANALYSE
+-- First, we select cards according to type (Artifact) and characteristic (Equip); then we calculate the total mana value from mana cost and compare it to the maximum mana cost achievable: if they are equal, we have found the correct one
+EXPLAIN ANALYSE -- This command is used to examine the efficiency of the query 
 SELECT c.name, (m.red + m.black + m.white + m.snow + m.green + m.colorless + m.blue) AS cost
 FROM mana_cost m, card c, types t, activable_characteristics a
 WHERE m.id=c.mana_cost
