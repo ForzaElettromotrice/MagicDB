@@ -1,5 +1,6 @@
 -- 10. Find all the creatures with Champion ability ordered by power
-EXPLAIN ANALYSE
+-- To optimize this query we only select the fields we are interested in; we avoid selecting distinct couples since there are no duplicates; we do an inner join to avoid 'where' conditions
+EXPLAIN ANALYSE -- This command is used to examine the efficiency of the query
 SELECT c.name, c.power
 FROM card c
          JOIN triggerable_characteristics tc
