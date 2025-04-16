@@ -1,5 +1,7 @@
 -- 4. Find all Red\Black enchantments with a 6 Mana Cost
-EXPLAIN ANALYSE
+-- First, we select cards according to type (Enchantment); then we calculate the total mana value summing the colors present in mana cost, and only select those equal to 6; then we check if the color of a card is either black or red; lastly we check if there aren't colors other than black and\or red
+-- Distinct is used to avoid duplicates
+EXPLAIN ANALYSE -- This command is used to examine the efficiency of the query 
 SELECT DISTINCT c.*
 FROM card c, types t, colors cl1, colors cl2
 WHERE c.name=t.name
