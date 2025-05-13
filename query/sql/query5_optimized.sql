@@ -1,7 +1,7 @@
 -- 5. Find the equippable artifact(s) with the highest mana cost
 -- We can optimize this query by calculating the total mana cost with the view; using a inner join instead of multiple 'where' clauses; and instead of doing a nested query we can order by higher mana cost and just select the first element
 EXPLAIN ANALYSE
-SELECT c.name, m.tot as cost
+SELECT c.name, m.cost as cost
 FROM card c
     JOIN types t
         ON t.name=c.name AND t.type = 'Artifact'

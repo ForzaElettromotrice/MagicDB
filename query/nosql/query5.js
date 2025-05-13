@@ -1,2 +1,3 @@
 // 5. Find the equippable artifact(s) with the highest mana cost
+// First we select the records that have 'Artifact' among their types and 'Equipment' among their subtypes, selecting only the relevant fields; then we sort in descending order by manaValue; in th end we select the first element, which will have the highest mana cost
 db.card.find({types: "Artifact", subtypes: "Equipment"}, {name: 1, manaValue: 1}).sort({manaValue: -1}).limit(1)

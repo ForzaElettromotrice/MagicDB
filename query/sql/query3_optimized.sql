@@ -1,7 +1,7 @@
 -- 3. Find the average defense of creatures with Deathtouch but without Reach
 -- We can optimize this query by avoiding inner and left joins and just checking if there are no creatures with Reach and Deathtouch with a nested query
 EXPLAIN ANALYSE
-SELECT AVG(c.defense) as avg_defense
+SELECT c.defense, c.name as avg_defense
 FROM card c, constant_characteristics cc
 WHERE c.name=cc.name
   AND cc.characteristic='Deathtouch'

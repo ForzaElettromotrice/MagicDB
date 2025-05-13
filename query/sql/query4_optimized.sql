@@ -4,7 +4,7 @@ EXPLAIN ANALYSE
 SELECT DISTINCT c.name
 FROM card c
          JOIN tot_mana m
-              ON m.id=c.mana_cost AND m.tot= 6
+              ON m.id=c.mana_cost AND m.cost= 6
          JOIN types t
               ON t.name=c.name AND t.type='Enchantment'
          JOIN colors cl
