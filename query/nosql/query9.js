@@ -1,1 +1,2 @@
-db.card.find({types: 'Creature', colors: {$size: 1, $in: ['G']}, keywords: {$all: ['Trample', 'Vigilance']}, manaValue: {$gt: 2}, "$where": "this.power>this.toughness"}, {name: 1})
+// 9. Find all creatures with power higher than defense, green with Trample, Vigilance and cost >= 3
+db.card.find({types: 'Creature', colors: {$size: 1, $in: ['G']}, keywords: {$all: ['Trample', 'Vigilance']}, manaValue: {$gt: 2}, $expr: {$gt: ["$power", "$toughness"]}}, {name: 1, power: 1, toughness: 1, manaValue: 1, colors: 1})

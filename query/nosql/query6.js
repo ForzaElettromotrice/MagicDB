@@ -1,1 +1,2 @@
+// 6. Find adventure cards that require at least 5 mana
 db.card.aggregate([{$match: {layout: "adventure"}}, {$group: {_id: "$name", totalMana: {$sum: "$faceManaValue"}}}, {$match: {totalMana: {$gt: 4}}}])

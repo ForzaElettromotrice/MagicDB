@@ -1,1 +1,2 @@
+// 3. Find the average defense of creatures with Deathtouch but without Reach
 db.card.aggregate([{$match: {keywords: {$ne: "Reach", $in: ['Deathtouch']}}}, {$group:{_id: "_id", avg_def:{$avg: "$toughness"}}}]);

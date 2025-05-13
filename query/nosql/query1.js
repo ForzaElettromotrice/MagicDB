@@ -1,1 +1,2 @@
+// 1. Find all legendary Planeswalkers that have loyalty abilities with a minimum cost of -5 and a maximum cost of +1
 db.card.distinct("name", {supertypes: "Legendary", types: "Planeswalker", abilities: {$elemMatch: {cost: {$gt: -6, $lt: 2}}}});

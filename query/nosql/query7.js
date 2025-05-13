@@ -1,1 +1,2 @@
+// 7. Find all the cards with a defense of at least 2 that have abilities requiring the sacrifice of a creature
 db.card.find({types: "Creature", toughness: {$gt: 1}, abilities: {$elemMatch: {cost: "Sacrifice"}}}, {name: 1})
