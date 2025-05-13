@@ -1,0 +1,1 @@
+db.card.find({types: "Artifact", subtypes: "Equipment"}, {name: 1, manaValue: 1}).sort({manaValue: -1}).limit(1)

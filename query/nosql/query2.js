@@ -1,0 +1,1 @@
+db.card.find({types: "Creature", keywords: "Flying", power: { $gt: 5 }}).count()

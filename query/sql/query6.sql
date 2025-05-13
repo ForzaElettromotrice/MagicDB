@@ -16,7 +16,6 @@ FROM double_card d, card c1, card c2, subtypes t1,
 WHERE d.name = c1.name
   AND d.subface = c2.name
   AND c1.name = t1.name
-
   AND t1.subtype = 'Adventure'
 GROUP BY d.name, d.subface
 HAVING SUM(t.value) > 4

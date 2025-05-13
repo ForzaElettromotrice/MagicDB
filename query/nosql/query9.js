@@ -1,0 +1,1 @@
+db.card.find({types: 'Creature', colors: {$size: 1, $in: ['G']}, keywords: {$all: ['Trample', 'Vigilance']}, manaValue: {$gt: 2}, "$where": "this.power>this.toughness"}, {name: 1})

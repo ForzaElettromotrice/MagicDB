@@ -1,0 +1,1 @@
+db.card.distinct("name", {supertypes: "Legendary", types: "Planeswalker", abilities: {$elemMatch: {cost: {$gt: -6, $lt: 2}}}});

@@ -1,0 +1,1 @@
+db.card.find({types: "Creature", toughness: {$gt: 1}, abilities: {$elemMatch: {cost: "Sacrifice"}}}, {name: 1})

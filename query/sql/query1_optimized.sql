@@ -8,3 +8,10 @@ FROM types t
          JOIN activable_ability a
               ON a.name =t.name AND a.loyalty BETWEEN -5 AND 1
 WHERE t.type='Planeswalker';
+
+
+
+
+
+
+

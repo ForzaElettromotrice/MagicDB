@@ -1,0 +1,1 @@
+db.card.aggregate([{$match: {layout: "adventure"}}, {$group: {_id: "$name", totalMana: {$sum: "$faceManaValue"}}}, {$match: {totalMana: {$gt: 4}}}])

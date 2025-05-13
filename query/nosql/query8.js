@@ -1,0 +1,1 @@
+db.card.aggregate([{$match: {types: "Instant", manaCost: {$regex: /^(\{X\}\{([WRPBUG]\}|\{([WPRBUG](\/[WRBUGP])*)\})|\{([WPRBUG](\/[WRBUGP])*)\})$/}}},{$group: {_id: {color: "$manaCost", name: "$name"}}}, {$sort: { "_id.color": 1, "_id.name": 1 }}]);

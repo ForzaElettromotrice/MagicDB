@@ -1,0 +1,1 @@
+db.card.aggregate([{$match: {keywords: {$ne: "Reach", $in: ['Deathtouch']}}}, {$group:{_id: "_id", avg_def:{$avg: "$toughness"}}}]);
