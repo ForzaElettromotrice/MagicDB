@@ -1,5 +1,5 @@
 from enums import types, supertypes, subtypes, activable_characteristics, attack_characteristics, constant_characterstics, triggerable_characteristics
-from tables import ManaCost, ActivableAbility, Card, Colors, Types, Supertypes, Subtypes, ActivableCharacteristics, AttackCharacteristics, ConstantCharacteristics, TriggerableCharacteristics
+from src.sql.tables import ManaCost, ActivableAbility, Card, Colors, Types, Supertypes, Subtypes, ActivableCharacteristics, AttackCharacteristics, ConstantCharacteristics, TriggerableCharacteristics
 
 def parse_mana_cost(mana_cost: str):
     if mana_cost == "":

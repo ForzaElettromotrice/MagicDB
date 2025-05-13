@@ -5,7 +5,7 @@ from typing import Any
 from peewee import IntegrityError
 
 from parsers import parse_mana_cost, parse_planeswalker_abilities, parse_colors, parse_types, parse_supertypes, parse_subtypes, parse_characteristic, parse_sacrifice_ability, parse_equip_ability
-from tables import Card, db, ManaCost, DoubleCard, MeldCard
+from src.sql.tables import Card, db, ManaCost, DoubleCard, MeldCard
 
 logger = logging.getLogger('peewee')
 logger.setLevel(logging.DEBUG)
@@ -200,7 +200,7 @@ Urza, Planeswalker"""
             raise err
 
 if __name__ == '__main__':
-    data = json.load(open('AtomicCards.json'))
+    data = json.load(open('../../data/AtomicCards.json'))
     print(len(data["data"]))
 
     melds = ["Titania, Gaea Incarnate", "Brisela, Voice of Nightmares", "Chittering Host", "Hanweir, the Writhing Township", "Mishra, Lost to Phyrexia", "Urza, Planeswalker"]
