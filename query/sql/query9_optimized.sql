@@ -12,5 +12,5 @@ FROM card c
          JOIN attack_characteristics ac2
               ON ac2.name=c.name AND ac2.characteristic='Vigilance'
          JOIN tot_mana m
-              ON m.id=c.mana_cost AND m.tot > 2
+              ON m.id=c.mana_cost AND m.cost > 2
 WHERE c.power>c.defense;
