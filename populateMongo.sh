@@ -1,0 +1,1 @@
+mongoimport --database magic --collection cards --file data/Mongo.json
